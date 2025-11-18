@@ -102,13 +102,15 @@ az keyvault secret set \
 Configure Key Vault access policy for Fabric workspace:
 
 ```bash
-# Get the Fabric workspace service principal
+# Get the Fabric workspace managed identity from Workspace Settings → Identity
 # Grant it "Get" permission on secrets
 az keyvault set-policy \
   --name "your-keyvault" \
-  --object-id "<fabric-service-principal-id>" \
+  --object-id "<fabric-workspace-managed-identity-id>" \
   --secret-permissions get
 ```
+
+**Note**: Fabric uses `notebookutils.credentials.getSecret()` which automatically handles authentication using the workspace managed identity.
 
 ### Step 5: Upload Utilities to Lakehouse
 

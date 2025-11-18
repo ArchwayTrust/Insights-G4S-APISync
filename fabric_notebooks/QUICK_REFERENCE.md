@@ -99,7 +99,9 @@ WHERE AcademyCode = 'ABC';
 ## 🛠️ Troubleshooting
 
 ### Error: Key Vault Access Denied
-✅ Check workspace managed identity has "Get" permission
+✅ Check workspace managed identity has "Get" permission on Key Vault
+✅ Verify Key Vault URL format: `https://vaultname.vault.azure.net/`
+✅ Test access: `notebookutils.credentials.getSecret('https://vaultname.vault.azure.net/', 'secret-name')`
 
 ### Error: Table Not Found
 ✅ Verify lakehouse attached to notebook

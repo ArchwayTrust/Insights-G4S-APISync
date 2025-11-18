@@ -124,12 +124,14 @@ DATABASE_NAME = "your-database"
 # Get Fabric workspace managed identity
 # From Fabric workspace settings → Identity
 
-# Grant access
+# Grant access (only 'get' permission needed)
 az keyvault set-policy \
   --name "archway-g4s-keyvault" \
   --object-id "<workspace-identity-object-id>" \
-  --secret-permissions get list
+  --secret-permissions get
 ```
+
+**Note**: Fabric notebooks use `notebookutils.credentials.getSecret()` which integrates natively with Key Vault using the workspace managed identity.
 
 ### 9. Test Run
 
