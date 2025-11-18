@@ -42,7 +42,7 @@ ORDER BY LoggedAt DESC;
 SELECT * 
 FROM sec.SyncResults
 WHERE Result = 0
-AND LoggedAt >= DATEADD(day, -7, GETUTCDATE())
+AND LoggedAt >= date_sub(current_timestamp(), INTERVAL 7 DAYS)
 ORDER BY LoggedAt DESC;
 ```
 
@@ -116,6 +116,8 @@ WHERE AcademyCode = 'ABC';
 ✅ Optimize tables: `OPTIMIZE table_name ZORDER BY (Academy, DataSet)`
 ✅ Vacuum old files: `VACUUM table_name RETAIN 168 HOURS`
 ✅ Check Spark cluster size
+
+Note: OPTIMIZE and VACUUM are Delta Lake commands, not standard SQL
 
 ## 📁 Key Tables
 

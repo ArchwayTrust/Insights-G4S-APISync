@@ -192,8 +192,10 @@ skip_base = False
 ## 🗂️ Data Tables
 
 ### Metadata Tables
-- `sec.AcademySecurity` - Academy configuration and API settings
-- `sec.SyncResults` - Sync execution tracking and logging
+- `sec.AcademySecurity` - Academy configuration and API settings (SQL Server/Azure SQL)
+- `sec.SyncResults` - Sync execution tracking and logging (SQL Server/Azure SQL)
+
+**Note**: Metadata tables use T-SQL (SQL Server), while data tables use Spark SQL (Delta Lake). Be aware of syntax differences when querying.
 
 ### Raw Layer Tables (Bronze)
 - `raw_g4s_student_details`

@@ -293,7 +293,7 @@ If issues occur, you can continue running the C# application:
 Compare record counts between old and new systems:
 
 ```sql
--- C# SQL Server
+-- C# SQL Server (T-SQL)
 SELECT 
     Academy,
     DataSet,
@@ -301,15 +301,19 @@ SELECT
 FROM g4s.Students
 GROUP BY Academy, DataSet
 ORDER BY Academy, DataSet;
+```
 
--- Fabric Delta
-SELECT 
-    Academy,
-    DataSet,
-    COUNT(*) as StudentCount
-FROM base_students
-GROUP BY Academy, DataSet
-ORDER BY Academy, DataSet;
+```python
+# Fabric Delta (Spark SQL)
+spark.sql("""
+    SELECT 
+        Academy,
+        DataSet,
+        COUNT(*) as StudentCount
+    FROM base_students
+    GROUP BY Academy, DataSet
+    ORDER BY Academy, DataSet
+""").show()
 ```
 
 ## Common Issues and Solutions
