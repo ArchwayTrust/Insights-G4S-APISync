@@ -31,24 +31,33 @@ class DeltaTableManager:
         data: list,
         table_name: str,
         partition_cols: Optional[List[str]] = None,
-        mode: str = "overwrite"
+        mode: str = "overwrite",
+        schema: Optional[StructType] = None
     ):
         """
-        Write raw JSON data to a Delta table
+        Write raw JSON data to a Delta table with optional schema validation
         
         Args:
             data: List of dictionaries containing the raw API data
             table_name: Name of the Delta table
             partition_cols: Optional list of columns to partition by
             mode: Write mode ('overwrite', 'append', 'merge')
+            schema: Optional StructType schema for validation
         """
         try:
-            # Convert to DataFrame
-            df = self.spark.createDataFrame(data)
+            # Convert to DataFrame with optional schema
+            if schema:
+                import json
+                json_rdd = self.spark.sparkContext.parallelize([json.dumps(record) for record in data])
+                df = self.spark.read.schema(schema).json(json_rdd)
+            else:
+                df = self.spark.createDataFrame(data)
             
-            # Add audit columns
-            df = df.withColumn("_ingested_at", current_timestamp()) \
-                   .withColumn("_source", lit("G4S_API"))
+            # Note: _ingested_at should be in the data already if using schemas
+            if "_ingested_at" not in df.columns:
+                df = df.withColumn("_ingested_at", current_timestamp())
+            if "_source" not in df.columns:
+                df = df.withColumn("_source", lit("G4S_API"))
             
             # Write to Delta
             writer = df.write.format("delta").mode(mode)

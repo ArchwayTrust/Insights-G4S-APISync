@@ -117,9 +117,10 @@ az keyvault set-policy \
 1. In your Fabric workspace, open the Lakehouse
 2. Navigate to Files → Create folder: `notebooks/utils`
 3. Upload the Python utility files:
-   - `g4s_api_client.py`
-   - `keyvault_client.py`
-   - `delta_manager.py`
+   - `g4s_api_client.py` - API client with pagination
+   - `keyvault_client.py` - Key Vault integration
+   - `delta_manager.py` - Delta table operations
+   - `g4s_schemas.py` - **Schema definitions for data validation**
 
 ### Step 6: Import Notebooks
 
@@ -238,15 +239,21 @@ skip_base = False
    - **Before**: Direct SQL Server bulk insert
    - **After**: Two-layer approach (Raw → Base) using Delta tables
 
-3. **Error Handling**
+3. **Schema Validation**
+   - **Before**: Strongly-typed C# entities (DTOs) provide compile-time validation
+   - **After**: PySpark StructType schemas provide runtime validation
+   - **Benefit**: Catches API changes and data quality issues at ingestion time
+   - **See**: [SCHEMA_REFERENCE.md](SCHEMA_REFERENCE.md) for complete schema catalog
+
+4. **Error Handling**
    - **Before**: Try-catch with immediate SQL logging
    - **After**: Same pattern preserved, logged to `sec.SyncResults`
 
-4. **Pagination**
+5. **Pagination**
    - **Before**: RestSharp with cursor-based pagination
    - **After**: Python `requests` library with same pagination logic
 
-5. **Partitioning**
+6. **Partitioning**
    - **Before**: No partitioning (single SQL tables)
    - **After**: Partitioned Delta tables by Academy and DataSet
 
@@ -280,10 +287,26 @@ Alternatively, use Fabric's Data Workflows for more complex orchestration.
 
 ```python
 # Error: Unable to retrieve secret
-# Solution: Verify service principal has "Get" permission on secrets
+# Solution: Verify workspace managed identity has "Get" permission on secrets
 ```
 
 Check Key Vault access policies and ensure Fabric workspace identity has access.
+
+### Schema Validation Errors
+
+```python
+# Error: Cannot safely cast 'field_name': StringType to IntegerType
+# Solution: API response format may have changed - check actual data
+```
+
+Common causes:
+- API returns string where integer expected
+- Field is null when marked as non-nullable in schema
+- Nested structure changed
+
+**Fix**: Update schema in `g4s_schemas.py` or set `nullable=True` for affected field.
+
+See [SCHEMA_REFERENCE.md](SCHEMA_REFERENCE.md) for troubleshooting guide.
 
 ### Table Not Found Errors
 
@@ -343,7 +366,15 @@ raw_df = spark.table("raw_g4s_students").cache()
 For issues specific to:
 - **G4S API**: Contact Go4Schools support
 - **Microsoft Fabric**: Reference [Microsoft Fabric documentation](https://learn.microsoft.com/fabric/)
+- **Schema Validation**: See [SCHEMA_REFERENCE.md](SCHEMA_REFERENCE.md)
 - **This implementation**: Review notebooks and check `sec.SyncResults` for errors
+
+## 📚 Additional Documentation
+
+- **[SCHEMA_REFERENCE.md](SCHEMA_REFERENCE.md)** - Complete schema catalog, type mappings, and validation guide
+- **[MIGRATION_GUIDE.md](MIGRATION_GUIDE.md)** - Detailed migration walkthrough
+- **[MIGRATION_CHECKLIST.md](MIGRATION_CHECKLIST.md)** - Step-by-step deployment checklist
+- **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Quick commands and troubleshooting
 
 ## 📝 License
 
