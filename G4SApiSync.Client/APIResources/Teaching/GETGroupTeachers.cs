@@ -72,7 +72,7 @@ namespace G4SApiSync.Client.EndPoints
                 }
 
                 //Removal dealt with in Groups end point.
-                //Remove exisitng groups from SQL database
+                //Remove existing groups from SQL database
                 //var currentGroups = _context.Groups.Where(i => i.DataSet == AcYear && i.Academy == AcademyCode);
                 //_context.Groups.RemoveRange(currentGroups);
                 //await _context.SaveChangesAsync();
