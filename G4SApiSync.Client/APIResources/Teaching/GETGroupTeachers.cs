@@ -34,7 +34,6 @@ namespace G4SApiSync.Client.EndPoints
             get { return _endPoint; }
         }
 
-        // Replace the DTOs property with the correct type to match the interface
         [JsonProperty("group_teachers")]
         public IEnumerable<GroupTeachersDTO> DTOs { get; set; }
 
