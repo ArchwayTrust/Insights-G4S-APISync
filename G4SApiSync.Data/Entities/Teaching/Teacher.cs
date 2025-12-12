@@ -38,5 +38,7 @@ namespace G4SApiSync.Data.Entities
         [MaxLength(100)]
         public string Code { get; set; }
 
+        public virtual ICollection<GroupTeacher> TeacherGroups { get; set; }
+
     }
 }

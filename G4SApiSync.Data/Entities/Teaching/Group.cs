@@ -28,5 +28,7 @@ namespace G4SApiSync.Data.Entities
 
         public virtual ICollection<GroupStudent> GroupStudents { get; set; }
 
+        public virtual ICollection<GroupTeacher> GroupTeachers { get; set; }
+
     }
 }

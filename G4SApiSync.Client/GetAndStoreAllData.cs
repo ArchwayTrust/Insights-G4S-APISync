@@ -139,6 +139,14 @@ namespace G4SApiSync.Client
                 syncResults.Add(new SyncResult { AcademyCode = academy.AcademyCode, EndPoint = getTeachers.EndPoint, Result = result, LoggedAt = DateTime.Now, DataSet = academy.CurrentAcademicYear });
             }
 
+            //GET Group Teachers
+            foreach (var academy in _academyList)
+            {
+                using GETGroupTeachers getGroupTeachers = new(_client, _context, _connectionString);
+                bool result = await getGroupTeachers.UpdateDatabase(academy.APIKey, academy.CurrentAcademicYear, academy.AcademyCode);
+                syncResults.Add(new SyncResult { AcademyCode = academy.AcademyCode, EndPoint = getGroupTeachers.EndPoint, Result = result, LoggedAt = DateTime.Now, DataSet = academy.CurrentAcademicYear });
+            }
+
             return syncResults;
         }
 
