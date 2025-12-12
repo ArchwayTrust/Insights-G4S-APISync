@@ -12,11 +12,19 @@ jobs:
     steps:
     - name: Download release asset
       run: |
-        $releaseUrl = "${{ github.event.release.assets[0].browser_download_url }}"
+        # Get the latest release info
+        $headers = @{
+          Authorization = "token ${{ secrets.GITHUB_TOKEN }}"
+          Accept = "application/vnd.github.v3+json"
+        }
+        
+        $latestRelease = Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/releases/latest" -Headers $headers
+        $releaseUrl = $latestRelease.assets[0].browser_download_url
         $zipFile = "G4SAPISync.zip"
         
-        Write-Host "Downloading release from: $releaseUrl"
-        Invoke-WebRequest -Uri $releaseUrl -OutFile $zipFile -Headers @{Authorization="token ${{ secrets.GITHUB_TOKEN }}"}
+        Write-Host "Downloading release: $($latestRelease.tag_name)"
+        Write-Host "From: $releaseUrl"
+        Invoke-WebRequest -Uri $releaseUrl -OutFile $zipFile -Headers $headers
         
         # Extract the zip
         $extractPath = "./publish"
