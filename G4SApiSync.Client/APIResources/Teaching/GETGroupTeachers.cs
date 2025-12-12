@@ -52,7 +52,7 @@ namespace G4SApiSync.Client.EndPoints
                 APIRequest<GETGroupTeachers, GroupTeachersDTO> getGroupTeachers = new(_client, _endPoint, APIKey, AcYear);
                 var groupTeachersDTO = getGroupTeachers.ToList();
 
-                //Create datatable for subjects.
+                //Create datatable for group teachers.
                 var dtGroupTeachers = new DataTable();
                 dtGroupTeachers.Columns.Add("GroupId", typeof(String));
                 dtGroupTeachers.Columns.Add("TeacherId", typeof(String));
