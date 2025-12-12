@@ -38,6 +38,7 @@ namespace G4SApiSync.Data
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<GroupStudent> GroupStudents { get; set; }
+        public virtual DbSet<GroupTeacher> GroupTeachers { get; set; }
         public virtual DbSet<Teacher> Teachers { get; set; }
 
 
@@ -122,6 +123,9 @@ namespace G4SApiSync.Data
             modelBuilder.Entity<GroupStudent>()
                 .HasKey(pc => new { pc.StudentId, pc.GroupId });
 
+            modelBuilder.Entity<GroupTeacher>()
+                .HasKey(pc => new { pc.TeacherId, pc.GroupId });
+
             modelBuilder.Entity<Subject>()
                 .HasOne<Department>(b => b.Department)
                 .WithMany(c => c.Subjects)
@@ -144,6 +148,18 @@ namespace G4SApiSync.Data
                 .HasOne<Student>(b => b.Student)
                 .WithMany(c => c.StudentGroups)
                 .HasForeignKey(s => s.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<GroupTeacher>()
+                .HasOne<Group>(b => b.Group)
+                .WithMany(c => c.GroupTeachers)
+                .HasForeignKey(s => s.GroupId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<GroupTeacher>()
+                .HasOne<Teacher>(b => b.Teacher)
+                .WithMany(c => c.TeacherGroups)
+                .HasForeignKey(s => s.TeacherId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             //Assessment
