@@ -3,10 +3,11 @@ name: Deploy to On-Premise
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: [self-hosted, windows]
     
     steps:
     - name: Download release asset
