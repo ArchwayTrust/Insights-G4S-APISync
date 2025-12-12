@@ -1,0 +1,62 @@
+name: Deploy to On-Premise
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    
+    steps:
+    - name: Download release asset
+      run: |
+        $releaseUrl = "${{ github.event.release.assets[0].browser_download_url }}"
+        $zipFile = "G4SAPISync.zip"
+        
+        Write-Host "Downloading release from: $releaseUrl"
+        Invoke-WebRequest -Uri $releaseUrl -OutFile $zipFile -Headers @{Authorization="token ${{ secrets.GITHUB_TOKEN }}"}
+        
+        # Extract the zip
+        $extractPath = "./publish"
+        if (Test-Path $extractPath) {
+          Remove-Item -Path $extractPath -Recurse -Force
+        }
+        Expand-Archive -Path $zipFile -DestinationPath $extractPath -Force
+        Write-Host "Extracted release to $extractPath"
+      shell: pwsh
+      
+    - name: Deploy to network share
+      run: |
+        $destination = "\\core-dw-files\Deployment\G4SAPISync"
+        $backup = "\\core-dw-files\Deployment\G4SAPISync.previous"
+        
+        # Create destination directory if it doesn't exist
+        if (-not (Test-Path $destination)) {
+          New-Item -Path $destination -ItemType Directory -Force
+        }
+        
+        # Remove old backup if it exists
+        if (Test-Path $backup) {
+          Write-Host "Removing previous backup..."
+          Remove-Item -Path $backup -Recurse -Force
+        }
+        
+        # Backup current deployment before overwriting
+        if (Test-Path $destination) {
+          Write-Host "Backing up current deployment to $backup..."
+          Copy-Item -Path $destination -Destination $backup -Recurse -Force
+        }
+        
+        # Copy published files to network share
+        Write-Host "Deploying new version to $destination..."
+        Copy-Item -Path "./publish/*" -Destination $destination -Recurse -Force
+        
+        Write-Host "Deployment completed successfully to $destination"
+      shell: pwsh
+      
+    - name: Deployment summary
+      run: |
+        Write-Host "✓ Downloaded release: ${{ github.event.release.tag_name }}"
+        Write-Host "✓ Deployed to \\core-dw-files\Deployment\G4SAPISync"
+      shell: pwsh
