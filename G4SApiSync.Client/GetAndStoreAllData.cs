@@ -5,6 +5,8 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,7 +26,16 @@ namespace G4SApiSync.Client
 
             var restOptions = new RestClientOptions("https://api.go4schools.com")
             {
-                ThrowOnAnyError = true
+                ThrowOnAnyError = true,
+
+                // Recycle pooled connections so a long sequential run doesn't reuse a stale socket
+                // (a common cause of the transient timeouts seen on the bigger endpoints).
+                ConfigureMessageHandler = _ => new SocketsHttpHandler
+                {
+                    PooledConnectionLifetime = TimeSpan.FromMinutes(2),
+                    PooledConnectionIdleTimeout = TimeSpan.FromMinutes(1),
+                    AutomaticDecompression = DecompressionMethods.All
+                }
             };
 
             _client = new RestClient(restOptions);
