@@ -7,6 +7,12 @@ Tool that syncs the G4S API to a a local SQL database.
 
 Feel free to use and ammend under the terms of the GNU license but we are unable to offer support or modifications.
 
+> **Microsoft Fabric version:** the [Fabric/](Fabric/) folder contains a notebook-based port
+> of this sync writing OneLake delta tables (raw + base lakehouses, snake_case naming,
+> Key Vault held API keys) plus a one-off SQL history migration — see
+> [Fabric/README.md](Fabric/README.md). The instructions below cover the original
+> SQL Server console app.
+
 ## Initial Setup
 You will need a Microsoft SQL Server and initially an AD user account with privaledges for database creation.
 

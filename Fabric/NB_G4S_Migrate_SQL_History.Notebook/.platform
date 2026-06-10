@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "NB_G4S_Migrate_SQL_History",
+    "description": "One-off migration: renames the PascalCase g4s.* tables copied from the on-prem SQL Server (via a pipeline Copy activity) to snake_case and merges them into the base lakehouse idempotently."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "f535b8bf-220e-47d1-bcae-8f2fff2f9cb6"
+  }
+}

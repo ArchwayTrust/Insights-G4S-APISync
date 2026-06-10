@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "NB_G4S_Base_Merge",
+    "description": "Merges the raw lakehouse G4S pull into the base lakehouse, which persists all academic years. Deletion scopes are driven by raw g4s.sync_scope. Also materialises v_students, v_behaviour and v_session_attendance."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "66e969e0-c785-439a-850e-63ef1721a624"
+  }
+}

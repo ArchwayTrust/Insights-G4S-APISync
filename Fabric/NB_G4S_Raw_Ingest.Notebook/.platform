@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "NB_G4S_Raw_Ingest",
+    "description": "Pulls every Go4Schools API endpoint for each configured academy and writes the current run's data into the raw lakehouse g4s schema (delta tables), plus sync_results and sync_scope run metadata. Port of the G4SApiSync .NET console app."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "ff8a75f8-4359-4623-840b-b11265cff624"
+  }
+}
